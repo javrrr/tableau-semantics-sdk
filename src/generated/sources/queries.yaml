@@ -1,0 +1,146 @@
+openapi: 3.0.1
+info:
+  title: Tableau Next Queries Operations
+  description: |-
+    The Tableau Semantics Query API enables you to execute semantic queries to answer a wide range of business 
+    questions.
+  version: v65.0
+paths:
+  /semantic-engine/gateway:
+    post:
+      tags:
+        - Queries
+      description: Executes a semantic query
+      operationId: postSemanticQueryExecute
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SemanticQueryRequest'
+        required: false
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SemanticQueryResponse'
+          description: Success
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SemanticQueryErrorResponse'
+          description: Bad Request
+servers:
+  - url: /services/data/v65.0
+components:
+  schemas:
+    SemanticQueryErrorResponse:
+      description: Represents Response with an error
+      properties:
+        errorCode:
+          description: The error code
+          type: string
+        message:
+          description: The message
+          type: string
+      type: object
+      example:
+        errorCode: INVALID_API_INPUT
+        message: 'An error occurred in Semantic Layer. TraceId: bc7c380f3a62d44c06e4f9ed3bfe0516
+          Status: INVALID_ARGUMENT Error Message: INVALID_ARGUMENT: {"message":"The
+          field ffef does not exist in table AccountSemanticLayer__dll. Queryable
+          fields are: AnnualRevenue__c,Annual Revenue,CreatedDate__c","error_code":"USER_ILLEGAL_ARGUMENT_RESOLVE_ENTITY_ERROR"}'
+    SemanticQueryRequest:
+      description: Input representation for creating Semantic Query
+      example:
+        dataspace: default
+        source: source
+        structuredSemanticQuery:
+          fields:
+            - expression:
+                table_field:
+                  name: Account Name
+                  table_name: AccountSemanticLayer__dll
+            - expression:
+                table_field:
+                  name: Annual Revenue
+                  table_name: AccountSemanticLayer__dll
+          options:
+            limit_options:
+              limit: 10
+          semanticModel:
+            apiName: SalesSDM
+            label: SalesSDM
+            semanticDataObjects:
+              - apiName: Sales_SDO
+                label: Sales_SDO
+                dataObjectName: Sales__dll
+                dataObjectType: Dmo
+                semanticDimensions:
+                  - apiName: Account Name
+                    label: Account Name
+                    dataType: Text
+                    dataObjectFieldName: AccountName__c
+                  - apiName: Annual Revenue
+                    label: Annual Revenue
+                    dataType: Number
+                    dataObjectFieldName: AnnualRevenue__c
+      properties:
+        dataspace:
+          description: Data space
+          type: string
+        source:
+          description: source
+          type: string
+        structuredSemanticQuery:
+          description: structuredSemanticQuery
+          properties: {}
+          type: object
+        semanticModel:
+          description: semanticModel
+          type: object
+      type: object
+    SemanticQueryResponse:
+      description: Represents Semantic Engine query output
+      example:
+        queryResults:
+          queryMetadata:
+            fields:
+              Account Name:
+                placeInOrder: 0
+                type: VARCHAR
+              Annual Revenue:
+                placeInOrder: 1
+                type: NUMERIC
+          queryData:
+            rows:
+              - values:
+                  - Ms. Penny Haley PhD
+                  - 89617
+              - values:
+                  - Edwin Day MD
+                  - 59040
+              - values:
+                  - Mr. Jim Watkins
+                  - 92956
+        status: SUCCESS
+      properties:
+        queryResults:
+          description: Query Results
+          properties:
+            queryMetadata:
+              properties:
+                fields:
+                  type: object
+                  description: fields in the results table
+            queryData:
+              properties:
+                rows:
+                  type: object
+                  description: response data
+          type: object
+        status:
+          description: Status ENUM
+          type: string
+      type: object

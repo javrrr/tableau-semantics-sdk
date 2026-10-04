@@ -1,0 +1,19 @@
+{
+  "dataspace": "default",
+  "semanticModelApiName": "Example_Model",
+  "structuredSemanticQuery": {
+    "fields": [
+      {
+        "expression": { "table_field": { "name": "Example Dimension", "table_name": "Example_SDO" } },
+        "alias": "dim",
+        "row_grouping": true
+      },
+      {
+        "expression": { "table_field": { "name": "Example Measure", "table_name": "Example_SDO" } },
+        "alias": "meas",
+        "semantic_aggregation_method": "SEMANTIC_AGGREGATION_METHOD_AUTO"
+      }
+    ],
+    "options": { "limit_options": { "limit": 10 } }
+  }
+}

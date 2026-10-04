@@ -1,0 +1,18 @@
+{
+  "queryResults": {
+    "queryMetadata": {
+      "fields": {
+        "dim": { "placeInOrder": 0, "type": "VARCHAR", "semanticType": { "semanticDimensionType": "SEMANTIC_DIMENSION_TYPE_TEXT" } },
+        "meas": { "placeInOrder": 1, "type": "NUMERIC", "semanticType": { "semanticMeasurementType": "SEMANTIC_MEASUREMENT_TYPE_CURRENCY" } }
+      }
+    },
+    "queryData": {
+      "rows": [
+        { "values": ["Tier A", 1898133.16] },
+        { "values": ["Tier B", 1652674.5] },
+        { "values": ["Tier C", 772361.94] }
+      ]
+    }
+  },
+  "status": "SUCCESS"
+}

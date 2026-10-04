@@ -1,0 +1,701 @@
+openapi: 3.0.3
+info:
+  title: Tableau Next Authoring Administration Operations
+  description: |-
+    The Tableau Next Authoring API allows you to create and edit semantic models and definitions, as well as customize existing ones as needed.
+  version: v65.0
+paths:
+  /ssot/semantic/models/{modelApiNameOrId}/shallow:
+    x-sfdc:
+      api-domain: ''
+      api-sub-domain: ''
+    description: This endpoint retrieves a shallow version of a semantic model, meaning
+      it excludes any definitions that are inherited from extended models. Extended
+      models are models that are built upon a base model by adding additional layers
+      of data or logic. This is useful when you need a lightweight version of the
+      model with only the essential base structure and no additional inherited definitions.
+    parameters:
+    - name: modelApiNameOrId
+      in: path
+      schema:
+        type: string
+      required: true
+    get:
+      tags:
+      - Authoring - Administration
+      operationId: getSemanticModelShallow
+      description: This endpoint retrieves a shallow version of a semantic model,
+        meaning it excludes any definitions that are inherited from extended models.
+        Extended models are models that are built upon a base model by adding additional
+        layers of data or logic. This is useful when you need a lightweight version
+        of the model with only the essential base structure and no additional inherited
+        definitions.
+      x-sfdc:
+        user-access-check: ''
+        org-access-check: SemanticAuthoring.orgCanAccessSemanticApi
+      x-connect:
+        connect-hidden:
+        - Apex
+      parameters:
+      - name: allowUnmapped
+        description: If set to True, includes unmapped semantic definitions in the
+          response.
+        in: query
+        schema:
+          type: boolean
+      - name: fieldName
+        description: Returns only fields that contain the specified substring in their
+          label.
+        in: query
+        schema:
+          type: string
+      - name: fineGrainSecurity
+        description: If enabled, applies fine-grained security rules and returns a
+          partial semantic model that respects access restrictions.
+        in: query
+        schema:
+          type: boolean
+      - name: includeModelContent
+        description: If set, enriches the response with the model’s full content.
+        in: query
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: A semantic model in shallow form is returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SemanticModelOutputRepresentation'
+  /ssot/semantic/models/{modelApiNameOrId}/clone:
+    x-sfdc:
+      api-domain: ''
+      api-sub-domain: ''
+    description: Clone an existing semantic model
+    parameters:
+    - name: modelApiNameOrId
+      in: path
+      schema:
+        type: string
+      required: true
+    post:
+      tags:
+      - Authoring - Administration
+      operationId: postSemanticModelClone
+      description: Create a new semantic model by cloning an existing one. creates
+        an exact duplicate of the model. After cloning, you can modify the new model
+        independently of the original one. This is helpful for creating variations
+        or experimenting with a model without affecting the original.
+      x-sfdc:
+        user-access-check: ''
+        org-access-check: SemanticAuthoring.orgCanAccessSemanticApi
+      x-connect:
+        connect-hidden:
+        - Apex
+      parameters: []
+      responses:
+        '200':
+          description: A new semantic model has been successfully cloned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SemanticModelOutputRepresentation'
+  /ssot/semantic/models/{modelApiNameOrId}/validate:
+    x-sfdc:
+      api-domain: ''
+      api-sub-domain: ''
+    description: Validate a semantic model
+    parameters:
+    - name: modelApiNameOrId
+      in: path
+      schema:
+        type: string
+      required: true
+    get:
+      tags:
+      - Authoring - Administration
+      operationId: getSemanticModelValidation
+      description: This endpoint validates a semantic model to ensure its structure
+        and configuration are correct. It checks for errors or inconsistencies in
+        the model's design and provides a detailed report on the validation results.
+        This is essential for ensuring the model is properly configured before it
+        is used in production.
+      x-sfdc:
+        user-access-check: ''
+        org-access-check: SemanticAuthoring.orgCanAccessSemanticApi
+      x-connect:
+        connect-hidden:
+        - Apex
+      parameters: []
+      responses:
+        '200':
+          description: Validation completed. The response includes validation details
+            for the semantic model.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SemanticModelValidationOutputRepresentation'
+  /ssot/semantic/models/{modelApiNameOrId}:
+    x-sfdc:
+      api-domain: ''
+      api-sub-domain: ''
+    description: Update specific fields of a semantic model
+    parameters:
+    - name: modelApiNameOrId
+      in: path
+      schema:
+        type: string
+      required: true
+    patch:
+      tags:
+      - Authoring - Administration
+      operationId: patchSemanticModel
+      description: This endpoint updates specific fields of a semantic model. Unlike
+        the PUT method, this operation modifies only the fields you specify, leaving
+        the rest of the model and its relationships intact. This is useful when you
+        need to make small adjustments without changing the entire model structure.
+      x-sfdc:
+        user-access-check: ''
+        org-access-check: SemanticAuthoring.orgCanAccessSemanticApi
+      x-connect:
+        connect-hidden:
+        - Apex
+      parameters:
+      - name: allowUnmapped
+        description: If set to True, includes unmapped semantic definitions in the
+          response.
+        in: query
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: The semantic model is updated with the specified field changes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SemanticModelOutputRepresentation'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SemanticModelInputRepresentation'
+    get:
+      tags:
+      - Authoring - Administration
+      operationId: getSemanticModel
+      description: Retrieve a complete semantic model.
+      x-sfdc:
+        user-access-check: ''
+        org-access-check: SemanticAuthoring.orgCanAccessSemanticApi
+      x-connect:
+        connect-hidden:
+        - Apex
+      parameters:
+      - name: allowUnmapped
+        description: Include unmapped semantic definitions in the response.
+        in: query
+        schema:
+          type: boolean
+      - name: fieldName
+        description: Filter results to fields whose labels contain the specified text.
+        in: query
+        schema:
+          type: string
+      - name: fineGrainSecurity
+        description: Apply fine-grained security filtering for a partial semantic
+          model.
+        in: query
+        schema:
+          type: boolean
+      - name: includeModelContent
+        description: Enrich the model with its content in the response.
+        in: query
+        schema:
+          type: boolean
+      - name: includeTableKeys
+        description: Include information about key qualifiers and primary key indicators
+          in the response.
+        in: query
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: The semantic model is returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SemanticModelOutputRepresentation'
+    delete:
+      tags:
+      - Authoring - Administration
+      operationId: deleteSemanticModel
+      description: This endpoint deletes a semantic model. Once deleted, the model
+        is permanently removed from the system and can no longer be accessed or used.
+        Be sure to review the model before deletion, as this action is irreversible.
+      x-sfdc:
+        user-access-check: ''
+        org-access-check: SemanticAuthoring.orgCanAccessSemanticApi
+      x-connect:
+        connect-hidden:
+        - Apex
+      parameters: []
+      responses:
+        '200':
+          description: The semantic model is deleted.
+    put:
+      tags:
+      - Authoring - Administration
+      operationId: putSemanticModel
+      description: This endpoint replaces the entire configuration of a semantic model
+        with the new definition provided in the request body. Unlike PATCH, which
+        only updates specific fields, PUT replaces the entire model, including all
+        fields, relationships, and dependencies. This is useful when you want to fully
+        redefine a model’s structure.
+      x-sfdc:
+        user-access-check: ''
+        org-access-check: SemanticAuthoring.orgCanAccessSemanticApi
+      x-connect:
+        connect-hidden:
+        - Apex
+      parameters:
+      - name: allowUnmapped
+        description: Include unmapped semantic definitions in the response.
+        in: query
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SemanticModelOutputRepresentation'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SemanticModelInputRepresentation'
+servers:
+- url: /services/data/v65.0
+components:
+  schemas:
+    SemanticModelSourceCreationTypeEnum:
+      type: string
+      enum:
+      - Manual
+      - Import
+    SemanticModelExternalConnectionOutputRepresentation:
+      type: object
+      description: Semantic model external connection output representation
+      additionalProperties: true
+    SemanticParameterOutputRepresentation:
+      type: object
+      description: Semantic parameter output representation
+      additionalProperties: true
+    SemanticRelationshipOutputRepresentation:
+      type: object
+      description: Semantic relationship output representation
+      additionalProperties: true
+    SemanticCategoryEnum:
+      type: string
+      enum:
+      - Marketing
+      - Commerce
+      - Sales
+      - Service
+      - Other
+    SemanticModelCurrencyOutputRepresentation:
+      type: object
+      description: Semantic model currency output representation
+      additionalProperties: true
+    SemanticGroupingOutputRepresentation:
+      type: object
+      description: Semantic grouping output representation
+      additionalProperties: true
+    SemanticQueryUnrelatedDataObjectsTypeEnum:
+      type: string
+      enum:
+      - Allow
+      - Disallow
+    SemanticOverrideOutputRepresentation:
+      type: object
+      description: Semantic override output representation
+      additionalProperties: true
+    SemanticCalculatedDimensionOutputRepresentation:
+      type: object
+      description: Semantic calculated dimension output representation
+      additionalProperties: true
+    SemanticMetricOutputRepresentation:
+      type: object
+      description: Semantic metric output representation
+      additionalProperties: true
+    SemanticDataObjectOutputRepresentation:
+      type: object
+      description: Semantic data object output representation
+      additionalProperties: true
+    SemanticEntityQueryableEnum:
+      type: string
+      enum:
+      - Queryable
+      - NonQueryable
+    SemanticModelOutputRepresentation:
+      additionalProperties: true
+      description: The output representation of a specific semantic model.
+      x-connect:
+        wrapper:
+          apex-class-name: SemanticModelOutput
+      allOf:
+      - $ref: '#/components/schemas/SemanticAbstractModelPartialOutputRepresentation'
+      - type: object
+        properties:
+          fieldsOverrides:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticOverrideOutputRepresentation'
+            description: The semantic overrides belonging to this model.
+          hasUnmapped:
+            type: boolean
+            description: The semantic model contains unmapped semantic definition.
+          isPartialSdm:
+            type: boolean
+            description: Indicates if the model is partial because of Data Gov.
+          semanticCalculatedDimensions:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticCalculatedDimensionOutputRepresentation'
+            description: The semantic calculated dimensions belonging to this model.
+          semanticCalculatedMeasurements:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticCalculatedMeasurementOutputRepresentation'
+            description: The semantic calculated measurements belonging to this model.
+          semanticDataObjects:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticDataObjectOutputRepresentation'
+            description: The list of semantic data objects belonging to the semantic
+              model.
+          semanticGroupings:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticGroupingOutputRepresentation'
+            description: The semantic groupings belonging to this model.
+          semanticLogicalViews:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticLogicalViewOutputRepresentation'
+            description: The semantic logical views belonging to this model.
+          semanticMetrics:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticMetricOutputRepresentation'
+            description: The semantic metrics belonging to this model.
+          semanticModelInfo:
+            $ref: '#/components/schemas/SemanticModelInfoOutputRepresentation'
+          semanticParameters:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticParameterOutputRepresentation'
+            description: The list of parameters belonging to the semantic model.
+          semanticRelationships:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticRelationshipOutputRepresentation'
+            description: The list of relationships belonging to the semantic model.
+    SemanticBaseModelOutputRepresentation:
+      type: object
+      description: Semantic base model output representation
+      additionalProperties: true
+    SemanticCalculatedMeasurementOutputRepresentation:
+      type: object
+      description: Semantic calculated measurement output representation
+      additionalProperties: true
+    SemanticModelVersionStateEnum:
+      type: string
+      enum:
+      - Draft
+      - Published
+      - PublishedWithDraft
+    SemanticModelInfoOutputRepresentation:
+      type: object
+      description: Semantic model info output representation
+      additionalProperties: true
+    SemanticEntityOutputRepresentation:
+      additionalProperties: true
+      description: Base Semantic Entity output representation
+      x-connect:
+        wrapper:
+          apex-class-name: SemanticBase
+      type: object
+      properties:
+        apiName:
+          type: string
+          description: The API name of the semantic entity.
+        baseModelApiName:
+          type: string
+          description: The origin model of the semantic entity.
+        cacheKey:
+          type: string
+          format: url
+          description: The Canonical URL of the collection for caching purposes only.
+        createdBy:
+          type: string
+          description: The user who created the semantic entity.
+        createdDate:
+          type: string
+          description: The date in which the semantic entity was created.
+        description:
+          type: string
+          description: The Description of the semantic entity.
+        externalConnectionApiName:
+          type: string
+          description: The externalConnectionApiName property references the external
+            connection details for external definition
+        id:
+          type: string
+          format: Id
+          description: The object ID of the semantic entity.
+        isQueryable:
+          $ref: '#/components/schemas/SemanticEntityQueryableEnum'
+        label:
+          type: string
+          description: The display name of the semantic entity to be used in the ui.
+        lastModifiedBy:
+          type: string
+          description: The user who last modified the semantic entity.
+        lastModifiedDate:
+          type: string
+          description: The date in which the semantic entity was last modified.
+    SemanticAbstractModelPartialOutputRepresentation:
+      additionalProperties: true
+      description: A partial semantic abstract model.
+      x-connect:
+        wrapper:
+          apex-class-name: SemanticAbstractModelPartialOutput
+      allOf:
+      - $ref: '#/components/schemas/SemanticEntityOutputRepresentation'
+      - type: object
+        properties:
+          agentEnabled:
+            type: boolean
+            description: Indicates whether agent features are enabled for this model.
+          app:
+            type: string
+            description: App to which the Semantic Model belongs.
+          baseModels:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticBaseModelOutputRepresentation'
+            description: List of base models, the current model is extending.
+          businessPreferences:
+            type: string
+            description: Allow Analysts to include business-specific preferences or
+              context.
+          categories:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticCategoryEnum'
+            description: Product category of the Semantic Model. Valid values are
+              Marketing, Commerce, Sales, Service, and Other.
+          currency:
+            $ref: '#/components/schemas/SemanticModelCurrencyOutputRepresentation'
+          dataspace:
+            type: string
+            description: Required. Dataspace in which the Semantic Model is located.
+          externalConnections:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticModelExternalConnectionOutputRepresentation'
+            description: List of external connections of the model.
+          isLocked:
+            type: boolean
+            description: Is the model locked for edit/ delete.
+          lastDraftModifiedDate:
+            type: string
+            description: Indicates last modified date of the draft version.
+          lastPublishedModifiedDate:
+            type: string
+            description: Indicates last modified date of the published version.
+          lockedActions:
+            type: object
+            additionalProperties:
+              type: array
+              items:
+                type: string
+            description: A mapping of actions to their corresponding lock reasons.
+              Each key represents an action (e.g., 'edit', 'delete', 'clone'), and
+              the value is a list of reasons indicating why the action is restricted.
+          queryUnrelatedDataObjects:
+            $ref: '#/components/schemas/SemanticQueryUnrelatedDataObjectsTypeEnum'
+          semanticCalculatedDimensionsUrl:
+            type: string
+            format: url
+            description: The URL that references the Semantic Calculated Dimensions.
+          semanticCalculatedMeasurementsUrl:
+            type: string
+            format: url
+            description: The URL that references the Semantic Calculated Measurements.
+          semanticDataObjectsUrl:
+            type: string
+            format: url
+            description: The URL that references the Semantic Data Objects.
+          semanticGroupingsUrl:
+            type: string
+            format: url
+            description: The URL that references the Semantic Groupings.
+          semanticParametersUrl:
+            type: string
+            format: url
+            description: The URL that references the Semantic Parameters.
+          semanticRelationshipsUrl:
+            type: string
+            format: url
+            description: The URL that references the Semantic Relationships.
+          sourceCreation:
+            $ref: '#/components/schemas/SemanticModelSourceCreationTypeEnum'
+          sourceCreationName:
+            type: string
+            description: The source identifier name
+          versionState:
+            $ref: '#/components/schemas/SemanticModelVersionStateEnum'
+    SemanticLogicalViewOutputRepresentation:
+      type: object
+      description: Semantic logical view output representation
+      additionalProperties: true
+    SemanticModelValidationOutputRepresentation:
+      additionalProperties: true
+      description: The output representation of a semantic model validation response.
+      x-connect:
+        wrapper:
+          apex-class-name: SemanticModelValidationOutput
+      type: object
+      properties:
+        isValid:
+          type: boolean
+          description: The validated semantic model.
+        semanticModel:
+          $ref: '#/components/schemas/SemanticModelOutputRepresentation'
+        validation:
+          $ref: '#/components/schemas/SemanticResourceValidationOutputRepresentation'
+      required:
+      - isValid
+      - semanticModel
+      - validation
+    SemanticResourceValidationOutputRepresentation:
+      type: object
+      description: Semantic resource validation output representation
+      additionalProperties: true
+    SemanticRelationshipInputRepresentation:
+      type: object
+      description: Semantic relationship input representation
+      additionalProperties: true
+    SemanticCalculatedMeasurementInputRepresentation:
+      type: object
+      description: Semantic calculated measurement input representation
+      additionalProperties: true
+    SemanticModelInputRepresentation:
+      description: Input representation for creating semantic model
+      x-connect:
+        connect-hidden:
+        - Apex
+        wrapper:
+          apex-class-name: SemanticModelInput
+      allOf:
+      - $ref: '#/components/schemas/SemanticModelPartialInputRepresentation'
+      - type: object
+        properties:
+          baseModels:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticBaseModelInputRepresentation'
+            description: Base semantic models
+          externalConnections:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticModelExternalConnectionInputRepresentation'
+            description: External connections
+          fieldsOverrides:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticOverrideInputRepresentation'
+            description: Semantic field overrides within the model.
+          semanticCalculatedDimensions:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticCalculatedDimensionInputRepresentation'
+            description: Semantic calculated dimensions within the model.
+          semanticCalculatedMeasurements:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticCalculatedMeasurementInputRepresentation'
+            description: Semantic calculated measurements within the model.
+          semanticDataObjects:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticDataObjectInputRepresentation'
+            description: Semantic data objects within the model.
+          semanticGroupings:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticGroupingInputRepresentation'
+            description: Semantic groupings within the model.
+          semanticLogicalViews:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticLogicalViewInputRepresentation'
+            description: Semantic logical views within the model.
+          semanticMetrics:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticMetricInputRepresentation'
+            description: Semantic metrics within the model.
+          semanticParameters:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticParameterInputRepresentation'
+            description: Semantic parameters within the model.
+          semanticRelationships:
+            type: array
+            items:
+              $ref: '#/components/schemas/SemanticRelationshipInputRepresentation'
+            description: Semantic relationships within the model.
+    SemanticModelPartialInputRepresentation:
+      type: object
+      description: Semantic model partial input representation
+      additionalProperties: true
+    SemanticCalculatedDimensionInputRepresentation:
+      type: object
+      description: Semantic calculated dimension input representation
+      additionalProperties: true
+    SemanticOverrideInputRepresentation:
+      type: object
+      description: Semantic override input representation
+      additionalProperties: true
+    SemanticGroupingInputRepresentation:
+      type: object
+      description: Semantic grouping input representation
+      additionalProperties: true
+    SemanticMetricInputRepresentation:
+      type: object
+      description: Semantic metric input representation
+      additionalProperties: true
+    SemanticLogicalViewInputRepresentation:
+      type: object
+      description: Semantic logical view input representation
+      additionalProperties: true
+    SemanticDataObjectInputRepresentation:
+      type: object
+      description: Semantic data object input representation
+      additionalProperties: true
+    SemanticParameterInputRepresentation:
+      type: object
+      description: Semantic parameter input representation
+      additionalProperties: true
+    SemanticModelExternalConnectionInputRepresentation:
+      type: object
+      description: Semantic model external connection input representation
+      additionalProperties: true
+    SemanticBaseModelInputRepresentation:
+      type: object
+      description: Semantic base model input representation
+      additionalProperties: true
